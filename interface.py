@@ -15,7 +15,7 @@ def print_feature_options(options):
         print(str(index) + ' - ' + option)
 
 data = pd.read_csv('treated_dataset.csv')
-data = data.drop('Unnamed: 0', axis=1)
+data = data.drop('Unnamed: 0', axis=1)      # TODO: discover where this Unnamed comes from
 data = data.sample(500, random_state=42)
 
 decision_tree = DecisionTreeClassifier()
@@ -39,12 +39,16 @@ print("Voce escolheu a posicao " + test)
 handler.reset_path()
 while (not handler.am_i_on_a_leave()):
     print(handler.generate_question())
-    feature = handler.get_feature_name()
-    print_feature_options(early_adopted_features_options[feature])
-    option_index = float(input())
-    print("Voce optou pela opcao " + str(option_index))
-    
-    # Hard set stuff that will need change later
-    handler.go_forward(option_index)
-print('Id previsto foi ' + str(handler.get_prediction()))
+    if (not handler.already_have_feature()):
+        feature = handler.get_feature_name()
+        print_feature_options(early_adopted_features_options[feature])
+        option_index = float(input())
+        print("Voce optou pela opcao " + str(option_index))
+        handler.go_forward(option_index)
+    else:
+        handler.go_forward()
+
+print('Node id que caiu foi = ' + str(handler.current_node))
+print(np.argwhere(handler.estimator_.tree_.value[handler.current_node]))
+#print('Id previsto foi ' + str(handler.get_prediction()))
     
