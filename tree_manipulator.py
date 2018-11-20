@@ -1,24 +1,43 @@
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier
+
 class TreeEngine():
-    def __init__(self, decision_tree, feature_list):
-        self.estimator_ = decision_tree
-        self.n_nodes = decision_tree.tree_.node_count
-        self.children_left = decision_tree.tree_.children_left
-        self.children_right = decision_tree.tree_.children_right
-        self.feature = decision_tree.tree_.feature
-        self.threshold = decision_tree.tree_.threshold
-        self.feature_list = feature_list
-        self.sample_values = [None] * len(feature_list)
+    def __init__(self, features_name):
+        self.estimator_ = DecisionTreeClassifier(max_depth=5 ,random_state=42)
+        self.features_name = features_name
+        self.sample_values = [None] * len(features_name)
         self.current_node = 0
+        self.classes = []
         
+    def fit(self, X, y):
+        self.classes = np.sort(y.values)
+        self.estimator_.fit(X,y)
+        self.update_tree_attributes()
+        
+    def update_tree_attributes(self):
+        self.n_nodes = self.estimator_.tree_.node_count
+        self.children_left = self.estimator_.tree_.children_left
+        self.children_right = self.estimator_.tree_.children_right
+        self.feature = self.estimator_.tree_.feature
+        self.threshold = self.estimator_.tree_.threshold
+        self.values = self.estimator_.tree_.value
+
     def reset_path(self):
-        self.sample_values = [None] * len(self.feature_list)
+        self.sample_values = [None] * len(self.features_name)
         self.current_node = 0
 
     def get_feature_index(self):
         return self.feature[self.current_node]
 
     def get_feature_name(self):
-        return self.feature_list[self.feature[self.current_node]]
+        return self.features_name[self.feature[self.current_node]]
+    
+    def get_node_values(self):
+        return self.values[self.current_node][0]
+    
+    def get_candidates_id(self):
+        candidates_index = [item for sublist in np.argwhere(self.get_node_values()) for item in sublist] 
+        return [self.classes[candidate_index] for candidate_index in candidates_index]
 
     def am_i_on_a_leave(self):
         return self.children_left[self.current_node] == self.children_right[self.current_node]
@@ -33,9 +52,6 @@ class TreeEngine():
     def go_to_right_child_(self):
         # This means feature > threshold
         self.current_node = self.children_right[self.current_node]
-        
-    def generate_question(self):
-        return 'Qual valor voce gostaria para ' + self.get_feature_name()
 
     def go_forward(self, new_value=None):
         # TODO: Revisit this boolean logic, it seems that it can be better
@@ -57,4 +73,4 @@ class TreeEngine():
     def get_prediction(self):
         if not self.am_i_on_a_leave():
             return -1
-        return self.estimator_.predict(self.sample_values)
+        return self.estimator_.predict([self.sample_values])
