@@ -35,9 +35,11 @@ engine.fit(X, y)
 end = time.time()
 print("Finished fitting in " + str(end - start)  + " seconds")
 candidates_ids = engine.search()
-print("Os candidatos que mais se encaixam na sua procura são:")
-print(data.columns)
 
-for i in candidates_ids:
-    print(data[data['id'] == i].values)
+print("Foram encontrados " + str(len(candidates_ids)) + " candidatos")
+
+#print("Os candidatos que mais se encaixam na sua procura são:")
+#print(data.columns)
+#for i in candidates_ids:
+#    print(data[data['id'] == i].values)
 
