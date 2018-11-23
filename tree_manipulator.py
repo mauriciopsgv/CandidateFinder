@@ -3,7 +3,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 class TreeEngine():
     def __init__(self, features_name):
-        self.estimator_ = DecisionTreeClassifier(max_depth=20 ,random_state=42)
+        self.estimator_ = DecisionTreeClassifier(max_depth=6 ,random_state=42)
         self.features_name = features_name
         self.sample_values = [None] * len(features_name)
         self.current_node = 0
@@ -14,6 +14,12 @@ class TreeEngine():
         self.estimator_.fit(X,y)
         self.update_tree_attributes()
         
+    def refit(self, X, y):
+        feature_index = self.get_feature_index()
+        self.sample_values = self.sample_values[:feature_index] + self.sample_values[feature_index + 1:]
+        self.features_name = self.features_name[:feature_index] + self.features_name[feature_index + 1:]
+        self.fit(X,y)
+        
     def update_tree_attributes(self):
         self.n_nodes = self.estimator_.tree_.node_count
         self.children_left = self.estimator_.tree_.children_left
@@ -23,7 +29,6 @@ class TreeEngine():
         self.values = self.estimator_.tree_.value
 
     def reset_path(self):
-        self.sample_values = [None] * len(self.features_name)
         self.current_node = 0
 
     def get_feature_index(self):

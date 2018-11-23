@@ -12,7 +12,7 @@ from search_engine import SearchEngine
 
 data = pd.read_csv('treated_dataset.csv')
 data = data.drop('Unnamed: 0', axis=1)      # TODO: discover where this Unnamed comes from
-#data = data.sample(500, random_state=42)
+data = data.sample(500, random_state=42)
 
 # set up
 
