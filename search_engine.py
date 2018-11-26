@@ -15,12 +15,12 @@ class SearchEngine():
         self.interface = Interface(feature_options)
         self.samples = None
         self.target = None
-        
+
     def fit(self, X, y):
         self.samples = X
         self.target = y
         self.tree_engine.fit(X,y)
-    
+
     def search(self): # TODO: be sure tree is fitted before searching
         test = input("Input a position: ")
         print("Voce escolheu a posicao " + test)

@@ -16,5 +16,12 @@ class Interface():
             print(str(index) + ' - ' + option)
             
     def ask_question(self, feature_name):
-        print('Qual valor voce gostaria para ' + feature_name)
+        if 'driving' in feature_name:
+            print('Voce gostaria que o profissional tivesse carteira de motorista tipo ' + feature_name[len('driving_')])
+        elif 'language' in feature_name:
+            print('Voce gostaria que o profissional falasse ' + feature_name[len('language_'):])
+        elif 'vehicle' in feature_name:
+            print('Voce gostaria que o profissional possuisse ' + feature_name[len('vehicle_'):])
+        else:
+            print('Qual valor voce gostaria para ' + feature_name)
 
