@@ -106,7 +106,7 @@ early_adopted_features_options = {
     }
 
 y = data['id']
-X = data[early_adopted_features]
+X = data[ ['title'] + early_adopted_features]
 
 engine = SearchEngine(early_adopted_features, early_adopted_features_options)
 print("Starting to fit tree with all samples")

@@ -3,7 +3,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 class TreeEngine():
     def __init__(self, features_name):
-        self.estimator_ = DecisionTreeClassifier(max_depth=6 ,random_state=42)
+        self.estimator_ = DecisionTreeClassifier(criterion='entropy', max_depth=6 ,random_state=42)
         self.features_name = features_name
         self.sample_values = [None] * len(features_name)
         self.current_node = 0

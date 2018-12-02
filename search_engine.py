@@ -8,18 +8,23 @@ import numpy as np
 
 from interface import Interface
 from tree_manipulator import TreeEngine
+from gensim.models import KeyedVectors
+
 
 class SearchEngine():
     def __init__(self, features_name, feature_options):
         self.tree_engine = TreeEngine(features_name)
         self.interface = Interface(feature_options)
+        self.word_model = KeyedVectors.load_word2vec_format('cbow_s50.txt')
         self.samples = None
+        self.titles = None
         self.target = None
 
     def fit(self, X, y):
-        self.samples = X
+        self.titles = X['title']
+        self.samples = X.drop('title', axis=1)
         self.target = y
-        self.tree_engine.fit(X,y)
+        self.tree_engine.fit(self.samples, self.target)
 
     def search(self): # TODO: be sure tree is fitted before searching
         test = input("Input a position: ")
